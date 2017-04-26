@@ -1,0 +1,165 @@
+myfunction
+
+  export function createMove2(
+      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
+    if (!stateBeforeMove) {
+      stateBeforeMove = getInitialState();
+    }
+    let board: Board = stateBeforeMove.board;
+    console.log(board[3]);//print borad 3rd row
+    if (board[row][col] !== '') {
+      throw new Error("One can only make a move in an empty position!");
+    }
+    if (getWinner(board) !== '' || isTie(board)) { 
+      //game not over
+      throw new Error("Can only make a move if the game is not over!");
+    }
+    //new added 
+    let revRivalDirEnd = getReversibleRivalDirEnd ( board, row, col, turnIndexBeforeMove ) ;
+    if (  revRivalDirEnd.length === 0 ){
+      throw new Error("Can only make a move on valid position!");
+    }
+    retrun {}
+  }
+
+
+    function isFull(board: Board): boolean{
+    for (let i = 0; i<ROWS; i++){
+      for (let j = 0; j<COLS; j++){
+        if(board[i][j] === ''){return false;}
+      }
+    }
+    return true;
+  }
+  function getBoardChessNum(board: Board):number[]{
+    let finalChessNum:number[] = [0,0];
+    for (let i = 0; i<ROWS; i++){
+      for (let j = 0; j<COLS; j++){
+        if (board[i][j] === 'X')  {finalChessNum[0] ++ ;}
+        if (board[i][j] === 'O')  {finalChessNum[1] ++ ;}
+        
+      }
+    }
+    return finalChessNum;
+  }
+
+  function getReversibleRivalDirEnd(board: Board, row: number, col: number, turnIndexBeforeMove: number): dir_end[] {
+    //reversible rivals chess dir and the end
+    let reversibleRivalDirEnd: dir_end[] = [];
+
+    let rivalChessDir:number[][] =  getRivalChessDir( board, row, col, turnIndexBeforeMove ) ;
+    if (rivalChessDir.length === 0 ){ //no rival chess around
+      return reversibleRivalDirEnd;
+    } else{ //check on every valid direction, if there is a self chess next to rivalchess
+      for (let rivaldir of rivalChessDir ){  //filter direction followed by self chess
+        let end_result:any = ifFollowedSelfChess(board, row, col, rivaldir, turnIndexBeforeMove ) ; 
+        if( end_result !== null) { reversibleRivalDirEnd.push({dir:rivaldir, end: end_result }); }
+      }
+    }
+  }
+
+  function ifFollowedSelfChess(board: Board, row: number, col: number, rivaldir:number[], turnIndexBeforeMove: number):any{
+    let turnChar = turnIndexBeforeMove === 0 ? 'X' : 'O'; //don't use if block statement, will cause scope issue
+    let rivalChar = turnIndexBeforeMove === 0 ? 'O' : 'X';
+    let checkRow = row + (2*rivaldir[0]) ;
+    let checkCol = col + (2*rivaldir[1]) ;
+    while( inBoard( [checkRow, checkCol], ROWS, COLS) ){
+      if( board[checkRow][checkCol]  === turnChar ){
+        return [checkRow, checkCol]; //end position
+      }else{
+        if( board[checkRow][checkCol]  === rivalChar ){
+          checkRow = checkRow + rivaldir[0] ; //update varible
+          checkCol = checkCol + rivaldir[0] ;
+        }else{ // equal '' nothing, not valid for the rivaldir direction from row,col
+          return null;
+        }
+      }
+    }
+    return null; //out borad
+  }
+
+  function getRivalChessDir(board: Board, row: number, col: number, turnIndexBeforeMove: number): number[][] {
+    let rivalIndex: number = 1 - turnIndexBeforeMove ;
+    let turnChar = turnIndexBeforeMove === 0 ? 'X' : 'O'; //don't use if block statement, will cause scope issue
+    let rivalChar = turnIndexBeforeMove === 0 ? 'O' : 'X';
+
+    let dels:number[] = [-1, 0, 1];
+    let eightDir :number[][] = [];
+    for (let dr of dels){ //for .. of loop iterates on values, for .. in loop interates on keys
+      for (let dc of dels){
+        if (!(dr===0 && dc===0)){
+          let checkRow = row + dr;
+          let checkCol = col + dc;
+          if(inBoard([checkRow, checkCol], ROWS, COLS) && board[checkRow][checkCol] === rivalChar )
+          { eightDir.push([dr,dc]); }
+        }
+      }
+    }
+    return eightDir; //direction of rival chess
+  }
+  function inBoard(pos:number[], ROWS:number, COLS:number ):boolean{
+    if( ( pos[0]>= 0 && pos[0]<=ROWS)  && ( pos[1]>= 0 && pos[1]<=COLS) ) {
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  function reverseBoard(boardAfterMove: Board, row: number, col: number, turnIndexBeforeMove: number,  reversibleRivalDirEnd: dir_end[]):any{
+    if(reversibleRivalDirEnd.length > 0){
+      let turnChar = turnIndexBeforeMove === 0 ? 'X' : 'O'; //don't use if block statement, will cause scope issue
+      let rivalChar = turnIndexBeforeMove === 0 ? 'O' : 'X';
+      boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+      for ( let rdir_end of reversibleRivalDirEnd  ){
+        for( let i=[row + rdir_end.dir[0], col+rdir_end.dir[1] ];i[0]!==rdir_end.end[0]; i[0]+=rdir_end.dir[0],i[1]+=rdir_end.dir[1] ){
+          boardAfterMove[i[0]][i[1]] = turnChar;
+        }
+      }
+    }
+  }
+
+  function getWinner2(board: Board): string { //return 'X' or 'O'
+
+    if( !isFull(board) )  //not full of board
+    {
+      return '';
+    }
+    let finalChessNum:number[] = getBoardChessNum(board) ;
+    if(finalChessNum[0]>finalChessNum[1]){ return 'X';}
+    else {
+      if(finalChessNum[0]<finalChessNum[1]){ return 'O';}
+      else{return '';}
+    }
+    
+  }
+  function isTie2(board: Board): boolean {
+    let finalChessNum:number[] = getBoardChessNum(board) ;
+    if(finalChessNum[0]===finalChessNum[1]){ return true;}
+    else{ return false;}
+  }
+
+
+  module gameLogic {
+  export const ROWS = 8;
+  export const COLS = 8;
+
+  /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
+  export function getInitialBoard(): Board {
+    let board: Board = [];
+    for (let i = 0; i < ROWS; i++) {
+      board[i] = [];
+      for (let j = 0; j < COLS; j++) {
+        board[i][j] = '';
+        if ( i=== ROWS/2 -1 && j === i)
+        { board[i][j] = 'O'; }
+        if ( i=== ROWS/2 && j === i )
+        { board[i][j] = 'O'; }
+
+        if ( i=== ROWS/2 -1 && j === i+1)
+        { board[i][j] = 'X'; }
+        if ( i=== ROWS/2 && j === i-1)
+        { board[i][j] = 'X'; }
+      }
+    }
+    return board;
+  }
