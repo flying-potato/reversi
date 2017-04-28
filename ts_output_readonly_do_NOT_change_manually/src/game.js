@@ -15,6 +15,11 @@ var game;
     // For community games. //proposals for multiple player games
     game.proposals = null;
     game.yourPlayerInfo = null;
+    game.nd_gameArea = null;
+    game.evt_NoValidMove = null;
+    // Listen for the event.
+    // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
+    // dispatch the evt_NoValidMove event
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
@@ -26,8 +31,31 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: null,
         });
+        game.nd_gameArea = document.getElementById("gameArea");
+        game.evt_NoValidMove = new Event('noValidMove');
+        console.log("event binding: ", game.nd_gameArea);
+        game.nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
     }
     game.init = init;
+    //when no valid moves we makeMove(null) for transit playerindex
+    function makeNoMove() {
+        var board = game.state.board;
+        var turnIndexBeforeMove = game.currentUpdateUI.yourPlayerIndex;
+        var validMoves = gameLogic.getTurnValidMove(board, turnIndexBeforeMove);
+        console.log("Playerindex", turnIndexBeforeMove, "From makeNoMove event listener function: ", validMoves);
+        // if( validMoves.length === 0 ){
+        //   let nextMove: IMove = null;
+        //   let turnIndex:number = stateBeforeMove.
+        //   nextMove = {}
+        // return {
+        //   endMatchScores: null,
+        //   turnIndex: turnIndex,
+        //   state: state
+        // };
+        //   makeMove()
+        // }
+    }
+    game.makeNoMove = makeNoMove;
     function registerServiceWorker() {
         // I prefer to use appCache over serviceWorker
         // (because iOS doesn't support serviceWorker, so we have to use appCache)
@@ -97,11 +125,28 @@ var game;
             if (game.currentUpdateUI && angular.equals(game.currentUpdateUI, params))
                 return;
         }
+        // console.log("before update currentUpdateUI: " ,  gameLogic.getBoardChessNum(state.board));
         game.currentUpdateUI = params;
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
+        }
+        console.log("in Update UI: ", gameLogic.getBoardChessNum(game.state.board));
+        var validMoves = gameLogic.getTurnValidMove(game.state.board, params.yourPlayerIndex);
+        if (validMoves.length === 0) {
+            log.info("Player ", params.yourPlayerIndex, " no where to move ");
+            var newparams = angular.copy(params);
+            newparams.yourPlayerIndex = 1 - newparams.yourPlayerIndex;
+            // ?? only updateUI enough, need dispatch the event 
+            game.currentUpdateUI = newparams;
+            var noneMove = {
+                endMatchScores: null,
+                turnIndex: newparams.yourPlayerIndex,
+                state: game.state
+            };
+            makeMove(noneMove); // 
+            // updateUI(newparams) ;
         }
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
@@ -195,6 +240,10 @@ var game;
         }
         // Move is legal, make it!
         makeMove(nextMove);
+        console.log("turnindex after makeMove", nextMove.turnIndex);
+        console.log("board after move", game.state.board);
+        var chessNum = gameLogic.getBoardChessNum(game.state.board);
+        console.log("black vs. white: ", chessNum[0], chessNum[1]);
     }
     game.cellClicked = cellClicked;
     function shouldShowImage(row, col) {

@@ -25,6 +25,7 @@ module gameLogic {
   export const ROWS = 8;
   export const COLS = 8;
 
+
   /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
   export function getInitialBoard(): Board {
     let board: Board = [];
@@ -74,7 +75,7 @@ module gameLogic {
     }
   }
   
-  function getBoardChessNum(board: Board):number[]{
+  export function getBoardChessNum(board: Board):number[]{
     let finalChessNum:number[] = [0,0];
     for (let i = 0; i<ROWS; i++){
       for (let j = 0; j<COLS; j++){

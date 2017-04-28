@@ -74,6 +74,7 @@ var gameLogic;
         }
         return finalChessNum;
     }
+    gameLogic.getBoardChessNum = getBoardChessNum;
     function getWinner(board) {
         if (!isFull(board)) {
             return '';
