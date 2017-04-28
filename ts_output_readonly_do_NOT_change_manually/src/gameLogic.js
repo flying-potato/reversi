@@ -52,8 +52,13 @@ var gameLogic;
                 }
             }
         }
-        // No empty cells, so we have a tie!
-        return true;
+        var result = getBoardChessNum(board);
+        if (result[0] === result[1]) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     function getBoardChessNum(board) {
         var finalChessNum = [0, 0];
@@ -202,6 +207,15 @@ var gameLogic;
         return ret;
     }
     gameLogic.getTurnValidMove = getTurnValidMove;
+    function ifMoveValid(row, col, validMoves) {
+        for (var _i = 0, validMoves_1 = validMoves; _i < validMoves_1.length; _i++) {
+            var validMove = validMoves_1[_i];
+            if (row === validMove[0] && col === validMove[1]) {
+                return true;
+            }
+        }
+        return false;
+    }
     function createMove(stateBeforeMove, row, col, turnIndexBeforeMove) {
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
@@ -210,11 +224,14 @@ var gameLogic;
         if (board[row][col] !== '') {
             throw new Error("One can only make a move in an empty position!");
         }
-        if (isFull(board) || getWinner(board) !== '') {
+        if (isFull(board) || getWinner(board) !== '' || isTie(board)) {
             throw new Error("Can only make a move if the game is not over!"); //cannot move
         }
-        //created validMoves before createMove
-        // let validMoves = getTurnValidMove(board, turnIndexBeforeMove);
+        // created validMoves before createMove
+        var validMoves = getTurnValidMove(board, turnIndexBeforeMove);
+        if (!ifMoveValid(row, col, validMoves)) {
+            throw new Error("Please choose a valid position with yellow dot");
+        }
         // console.log( "Valid Moves: ", validMoves);
         var boardAfterMove = angular.copy(board);
         //************ begin change board ************
