@@ -17,7 +17,7 @@ module game {
   export let didMakeMove: boolean = false; // You can only make one move per updateUI
   export let animationEndedTimeout: ng.IPromise<any> = null;
   export let state: IState = null;
-  export let validMoves: number[][] = [] ; //newly added to store valid moves
+  // export let validMoves: number[][] = [] ; //newly added to store valid moves
   // For community games. //proposals for multiple player games
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
@@ -231,7 +231,8 @@ module game {
 
   export function isValidMove(row:number, col:number):boolean {
     if(state.board[row][col] === ''){
-      validMoves = gameLogic.getTurnValidMove(state.board, currentUpdateUI.turnIndex) ;
+      
+      let validMoves = gameLogic.getTurnValidMove(state.board, currentUpdateUI.turnIndex) ;
       for ( let validMove of validMoves )
       {
         if (row === validMove[0] && col === validMove[1])

@@ -145,10 +145,8 @@ var gameLogic;
                 if (!(dr === 0 && dc === 0)) {
                     var checkRow = row + dr;
                     var checkCol = col + dc;
-                    if (inBoard([checkRow, checkCol], gameLogic.ROWS, gameLogic.COLS)) {
-                        if (board[checkRow][checkCol] === rivalChar) {
-                            eightDir.push([dr, dc]);
-                        }
+                    if (inBoard([checkRow, checkCol], gameLogic.ROWS, gameLogic.COLS) && board[checkRow][checkCol] === rivalChar) {
+                        eightDir.push([dr, dc]);
                     }
                 }
             }
@@ -160,7 +158,8 @@ var gameLogic;
         var rivalChar = turnIndexBeforeMove === 0 ? 'O' : 'X';
         // let checkRow = row + (2*rivaldir[0]) ;
         // let checkCol = col + (2*rivaldir[1]) ;
-        for (var checkRow = row + (2 * rivaldir[0]), checkCol = col + (2 * rivaldir[1]); inBoard([checkRow, checkCol], gameLogic.ROWS, gameLogic.COLS); checkRow += rivaldir[0], checkCol += rivaldir[1]) {
+        var checkRow = row + (2 * rivaldir[0]), checkCol = col + (2 * rivaldir[1]);
+        while (inBoard([checkRow, checkCol], gameLogic.ROWS, gameLogic.COLS)) {
             if (board[checkRow][checkCol] === followStr) {
                 return [checkRow, checkCol]; //return end position
             }

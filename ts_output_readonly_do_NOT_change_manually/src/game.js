@@ -11,7 +11,7 @@ var game;
     game.didMakeMove = false; // You can only make one move per updateUI
     game.animationEndedTimeout = null;
     game.state = null;
-    game.validMoves = []; //newly added to store valid moves
+    // export let validMoves: number[][] = [] ; //newly added to store valid moves
     // For community games. //proposals for multiple player games
     game.proposals = null;
     game.yourPlayerInfo = null;
@@ -212,8 +212,8 @@ var game;
     game.isPieceO = isPieceO;
     function isValidMove(row, col) {
         if (game.state.board[row][col] === '') {
-            game.validMoves = gameLogic.getTurnValidMove(game.state.board, game.currentUpdateUI.turnIndex);
-            for (var _i = 0, validMoves_1 = game.validMoves; _i < validMoves_1.length; _i++) {
+            var validMoves = gameLogic.getTurnValidMove(game.state.board, game.currentUpdateUI.turnIndex);
+            for (var _i = 0, validMoves_1 = validMoves; _i < validMoves_1.length; _i++) {
                 var validMove = validMoves_1[_i];
                 if (row === validMove[0] && col === validMove[1]) {
                     return true;
