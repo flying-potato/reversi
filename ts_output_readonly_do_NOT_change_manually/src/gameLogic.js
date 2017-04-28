@@ -116,7 +116,6 @@ var gameLogic;
     function reverseLine(board, row, col, dir, end) {
         //reverse logic is or , not and, one not equal, not reaching end
         for (var r = row + dir[0], c = col + dir[1]; (r !== end[0] || c !== end[1]); r += dir[0], c += dir[1]) {
-            console.log("reverse position: ", r, ",", c);
             reversePos(board, r, c);
         }
     }

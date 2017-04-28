@@ -183,7 +183,6 @@ var game;
         // show the validMoves as star
         var nextMove = null;
         try {
-            console.log("what is proposal: ", game.proposals);
             nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
         }
         catch (e) {

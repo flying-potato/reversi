@@ -201,7 +201,6 @@ module game {
 
     let nextMove: IMove = null;
     try {
-          console.log("what is proposal: " ,proposals);
       nextMove = gameLogic.createMove(
           state, row, col, currentUpdateUI.turnIndex);
     } catch (e) { // catch the error
