@@ -188,7 +188,7 @@ module game {
 
   function isMyTurn() {
     return !didMakeMove && // you can only make one move per updateUI.
-      currentUpdateUI.turnIndex >= 0 && // game is ongoing
+      currentUpdateUI.turnIndex >= 0 && // game is ongoing not -1(over)
       currentUpdateUI.yourPlayerIndex === currentUpdateUI.turnIndex; // it's my turn
   }
 
@@ -196,8 +196,11 @@ module game {
     log.info("Clicked on cell:", row, col);
     if (!isHumanTurn()) return;
     // let validMoves = gameLogic.getTurnValidMove(state.board, currentUpdateUI.turnIndex);
+    // if( validMoves.length === 0) {
 
-    // show the validMoves as star
+    //     currentUpdateUI.turnIndex = 1 - currentUpdateUI.turnIndex;
+    //     return;
+    // }
 
     let nextMove: IMove = null;
     try {

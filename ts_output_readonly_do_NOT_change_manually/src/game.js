@@ -180,7 +180,10 @@ var game;
         if (!isHumanTurn())
             return;
         // let validMoves = gameLogic.getTurnValidMove(state.board, currentUpdateUI.turnIndex);
-        // show the validMoves as star
+        // if( validMoves.length === 0) {
+        //     currentUpdateUI.turnIndex = 1 - currentUpdateUI.turnIndex;
+        //     return;
+        // }
         var nextMove = null;
         try {
             nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
