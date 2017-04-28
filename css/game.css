@@ -31,16 +31,16 @@ body {
   background-color: rgb(255,150,255);
 }
 .l{
-  border-left: 4pt solid black;
+  border-left: 2pt solid black;
 }
 .r {
-  border-right: 4pt solid black;
+  border-right: 2pt solid black;
 }
 .b {
-  border-bottom: 4pt solid black;
+  border-bottom: 2pt solid black;
 }
 .u {
-  border-top: 4pt solid black;
+  border-top: 2pt solid black;
 }
 
 
