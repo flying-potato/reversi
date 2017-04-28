@@ -69,15 +69,7 @@ module gameLogic {
     // No empty cells, so we have a tie!
     return true;
   }
-
-  /**
-   * Return the winner (either 'X' or 'O') or '' if there is no winner.
-   * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-   * E.g., getWinner returns 'X' for the following board:
-   *     [['X', 'O', ''],
-   *      ['X', 'O', ''],
-   *      ['X', '', '']]
-   */
+  
   function getBoardChessNum(board: Board):number[]{
     let finalChessNum:number[] = [0,0];
     for (let i = 0; i<ROWS; i++){
@@ -90,14 +82,14 @@ module gameLogic {
   }
 
   function getWinner(board: Board): string {
-    if(!isFull(board)){
-      console.log("board not full ");
+    if(!isFull(board)){ // only tell who win on Full Board
       return '';
     }
     let result:number[] = getBoardChessNum(board);
     if(result[0]>result[1]){ return 'X';}
     else {
       if(result[0]<result[1]){ return 'O';}
+      else { return '' ;}
     }
   }
 
@@ -114,7 +106,7 @@ module gameLogic {
    * with index turnIndexBeforeMove makes a move in cell row X col.
    */
   function inBoard(pos:number[], ROWS:number, COLS:number ):boolean{
-    if( ( pos[0]>= 0 && pos[0]<=ROWS)  && ( pos[1]>= 0 && pos[1]<=COLS) ) {
+    if( ( pos[0]>= 0 && pos[0]<ROWS)  && ( pos[1]>= 0 && pos[1]<COLS) ) {
       return true;
     }else{
       return false;
@@ -157,8 +149,10 @@ module gameLogic {
         if (!(dr===0 && dc===0)){
           let checkRow = row + dr;
           let checkCol = col + dc;
-          if(inBoard([checkRow, checkCol], ROWS, COLS) && board[checkRow][checkCol] === rivalChar )
-          { eightDir.push([dr,dc]); }
+          if(inBoard([checkRow, checkCol], ROWS, COLS)  ){
+            if ( board[checkRow][checkCol] === rivalChar )
+            { eightDir.push([dr,dc]); }
+          }
         }
       }
     }
@@ -168,20 +162,21 @@ module gameLogic {
   function ifFollowedSpecString(followStr:string, board: Board, row: number, col: number, rivaldir:number[], turnIndexBeforeMove: number):any{
     let turnChar = turnIndexBeforeMove === 0 ? 'X' : 'O'; //don't use if block statement, will cause scope issue
     let rivalChar = turnIndexBeforeMove === 0 ? 'O' : 'X';
-    let checkRow = row + (2*rivaldir[0]) ;
-    let checkCol = col + (2*rivaldir[1]) ;
-    while( inBoard( [checkRow, checkCol], ROWS, COLS) ){
+    // let checkRow = row + (2*rivaldir[0]) ;
+    // let checkCol = col + (2*rivaldir[1]) ;
+
+    for( let checkRow = row + (2*rivaldir[0]), checkCol = col + (2*rivaldir[1]) ; 
+       inBoard( [checkRow, checkCol], ROWS, COLS); checkRow += rivaldir[0],checkCol += rivaldir[1]  )
+    {
       if( board[checkRow][checkCol]  === followStr ){
         return [checkRow, checkCol]; //return end position
       }
-
       if( board[checkRow][checkCol]  === rivalChar ){
         checkRow = checkRow + rivaldir[0] ; //update varible
         checkCol = checkCol + rivaldir[1] ; //update col adding rivaldir[1]
       }else{ // equal '' nothing, not valid for the rivaldir direction from row,col
         return null;
       }
-      
     }
     return null; //out borad
   }
@@ -200,7 +195,7 @@ function getTurnChessPos(board: Board, turnIndexBeforeMove: number):number[][]{
   return ret;
 }
 
-function getTurnValidMove(board: Board, turnIndexBeforeMove: number):number[][]{
+export function getTurnValidMove(board: Board, turnIndexBeforeMove: number):number[][]{
   let turnPos = getTurnChessPos(board, turnIndexBeforeMove);
   let ret:number[][] = [];
   for(let eachPos of turnPos ) //current players chess positions
@@ -226,26 +221,24 @@ function getTurnValidMove(board: Board, turnIndexBeforeMove: number):number[][]{
     if (board[row][col] !== '') {
       throw new Error("One can only make a move in an empty position!");
     }
-    if (!isFull(board)&&getWinner(board) !== '' ) { // when to make move, not full and no winner
-      throw new Error("Can only make a move if the game is not over!");
+    if (isFull(board)||getWinner(board) !== '' ) { // when to make move, not full and no winner
+      throw new Error("Can only make a move if the game is not over!"); //cannot move
     }
 //created validMoves before createMove
-let validMoves = getTurnValidMove(board, turnIndexBeforeMove);
-console.log( "Valid Moves: ", validMoves);
+// let validMoves = getTurnValidMove(board, turnIndexBeforeMove);
+// console.log( "Valid Moves: ", validMoves);
 
     let boardAfterMove = angular.copy(board);
 
-    let rivalDirs = getRivalChessDir(boardAfterMove, row, col,turnIndexBeforeMove);
     //************ begin change board ************
     boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+    let rivalDirs = getRivalChessDir(boardAfterMove, row, col,turnIndexBeforeMove);
     let dir_ends:dir_end[] =getReversibleRivalDirEnd(boardAfterMove, row, col,rivalDirs, turnIndexBeforeMove);
     
     for (let dir_end of dir_ends){
       reverseLine(boardAfterMove, row, col, dir_end.dir, dir_end.end);
     }
-    // console.log("BOARD",boardAfterMove);
-    //************ end change board ************
-    
+
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;

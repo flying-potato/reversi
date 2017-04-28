@@ -17,7 +17,8 @@ module game {
   export let didMakeMove: boolean = false; // You can only make one move per updateUI
   export let animationEndedTimeout: ng.IPromise<any> = null;
   export let state: IState = null;
-  // For community games.
+  export let validMoves: number[][] = [] ; //newly added to store valid moves
+  // For community games. //proposals for multiple player games
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
 
@@ -194,12 +195,18 @@ module game {
   export function cellClicked(row: number, col: number): void {
     log.info("Clicked on cell:", row, col);
     if (!isHumanTurn()) return;
+    // let validMoves = gameLogic.getTurnValidMove(state.board, currentUpdateUI.turnIndex);
+
+    // show the validMoves as star
+
     let nextMove: IMove = null;
     try {
+          console.log("what is proposal: " ,proposals);
       nextMove = gameLogic.createMove(
           state, row, col, currentUpdateUI.turnIndex);
-    } catch (e) {
-      log.info(["Cell is already full in position:", row, col]);
+    } catch (e) { // catch the error
+      log.info(["cannot make a move on position: ", row, col, " whose value is ", state.board[row][col]]);
+      log.info("ERROR INFO: ", e)
       return;
     }
     // Move is legal, make it!
@@ -220,6 +227,20 @@ module game {
 
   export function isPieceO(row: number, col: number): boolean {
     return isPiece(row, col, 1, 'O');
+  }
+
+  export function isValidMove(row:number, col:number):boolean {
+    if(state.board[row][col] === ''){
+      validMoves = gameLogic.getTurnValidMove(state.board, currentUpdateUI.turnIndex) ;
+      for ( let validMove of validMoves )
+      {
+        if (row === validMove[0] && col === validMove[1])
+        {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   export function shouldSlowlyAppear(row: number, col: number): boolean {
