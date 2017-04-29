@@ -76,10 +76,18 @@ var gameLogic;
     }
     gameLogic.getBoardChessNum = getBoardChessNum;
     function getWinner(board) {
-        if (!isFull(board)) {
-            return '';
-        }
         var result = getBoardChessNum(board);
+        if (!isFull(board)) {
+            if (result[1] === 0) {
+                return 'X';
+            }
+            if (result[0] === 0) {
+                return 'O';
+            }
+            else {
+                return '';
+            }
+        }
         if (result[0] > result[1]) {
             return 'X';
         }

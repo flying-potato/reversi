@@ -87,10 +87,14 @@ module gameLogic {
   }
 
   function getWinner(board: Board): string {
-    if(!isFull(board)){ // only tell who win on Full Board
-      return '';
-    }
     let result:number[] = getBoardChessNum(board);
+    if(!isFull(board)){ // only tell who win on Full Board
+      if(result[1]===0) {return 'X';}
+      if(result[0] === 0) {return 'O';}
+      else {
+        return '';
+      }
+    }
     if(result[0]>result[1]){ return 'X';}
     else {
       if(result[0]<result[1]){ return 'O';}
