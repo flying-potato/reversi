@@ -28,25 +28,25 @@ textarea, input {
   display: none !important;
 }
 body {
-  background-color: rgb(255,150,255);
+  background-color: rgb(34,150,2);
 }
 .l{
-  border-left: 2pt solid black;
+  border-left: 1pt solid black;
 }
 .r {
-  border-right: 2pt solid black;
+  border-right: 1pt solid black;
 }
 .b {
-  border-bottom: 2pt solid black;
+  border-bottom: 1pt solid black;
 }
 .u {
-  border-top: 2pt solid black;
+  border-top: 1pt solid black;
 }
 
 
 .slowlyAppear {
-  animation: slowlyAppear 1.5s linear;
-}
+  animation: slowlyAppear 0.5s linear;
+
 
 @keyframes slowlyAppear {
   from {opacity: 0.1;}
