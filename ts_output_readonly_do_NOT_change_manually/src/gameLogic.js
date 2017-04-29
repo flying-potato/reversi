@@ -84,6 +84,14 @@ var gameLogic;
             if (result[0] === 0) {
                 return 'O';
             }
+            if (getTurnValidMove(board, 0).length === 0 && getTurnValidMove(board, 1).length === 0) {
+                if (result[0] > result[1]) {
+                    return 'X';
+                }
+                else {
+                    return 'O';
+                }
+            }
             else {
                 return '';
             }
