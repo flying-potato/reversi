@@ -28,7 +28,7 @@ textarea, input {
   display: none !important;
 }
 body {
-  background-color: rgb(255,150,255);
+  background-color: rgb(30,79,36);
 }
 .l{
   border-left: 2pt solid black;
@@ -47,7 +47,11 @@ body {
 .slowlyAppear {
   animation: slowlyAppear 0.5s linear;
 }
-
+.flipper {
+	transition: 1s;
+	transform-style: preserve-3d;
+	position: relative;
+}
 @keyframes slowlyAppear {
   from {opacity: 0.1;}
   to {opacity: 1;}
