@@ -45,7 +45,7 @@ body {
 
 
 .slowlyAppear {
-  animation: slowlyAppear 0.5s linear;
+  animation: slowlyAppear 1.5s linear;
 }
 
 @keyframes slowlyAppear {
