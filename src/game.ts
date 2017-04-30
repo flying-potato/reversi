@@ -21,8 +21,8 @@ module game {
   // For community games. //proposals for multiple player games
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
-  export let nd_gameArea:any = null;
-  export let evt_NoValidMove:any = null; 
+  // export let nd_gameArea:any = null;
+  // export let evt_NoValidMove:any = null; 
 
   // Listen for the event.
   // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
@@ -40,10 +40,10 @@ module game {
       updateUI: updateUI,
       getStateForOgImage: null,
     });
-    nd_gameArea =  document.getElementById("gameArea");
-    evt_NoValidMove = new Event('noValidMove');
-    console.log("event binding: ", nd_gameArea);
-    nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
+    // nd_gameArea =  document.getElementById("gameArea");
+    // evt_NoValidMove = new Event('noValidMove');
+    // console.log("event binding: ", nd_gameArea);
+    // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
     
   }
   //when no valid moves we makeMove(null) for transit playerindex
@@ -134,29 +134,41 @@ module game {
       params.playerIdToProposal = null;
       if (currentUpdateUI && angular.equals(currentUpdateUI, params)) return;
     }
-    // console.log("before update currentUpdateUI: " ,  gameLogic.getBoardChessNum(state.board));
-    currentUpdateUI = params;
+    // console.log("before update currentUpdateUI: " ,  gameLogic.getBoardChessNum(currentUpdateUI.state.board));
+    log.info( "before update currentUpdateUI: " ,currentUpdateUI ); //-----------
+
+    currentUpdateUI = params;//IUpdateUI extends IMove{endmatchscore, turnIndex, board }
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
     }
-    console.log("in Update UI: ", gameLogic.getBoardChessNum(state.board))
+
+    log.info( "after update currentUpdateUI: " ,currentUpdateUI );
+    console.log("chess# : ", gameLogic.getBoardChessNum(state.board))
     let validMoves = gameLogic.getTurnValidMove(state.board, params.yourPlayerIndex)
-    if(validMoves.length===0){
+    let validMoves2 = gameLogic.getTurnValidMove(state.board,1-params.yourPlayerIndex)
+    if(validMoves.length === 0&& validMoves2.length>0){
       log.info("Player ", params.yourPlayerIndex, " no where to move ")
       let newparams = angular.copy(params) ;
-      newparams.yourPlayerIndex = 1- newparams.yourPlayerIndex;
-      // ?? only updateUI enough, need dispatch the event 
+      newparams.yourPlayerIndex = 1 - newparams.yourPlayerIndex;
+      newparams.turnIndex = 1 - newparams.turnIndex ;
+      // update UI again
       currentUpdateUI = newparams;
+      state.delta = {row:-1, col:-1} ;
       let noneMove:IMove = {
         endMatchScores: null,
         turnIndex: newparams.yourPlayerIndex ,
         state: state
       };
+      log.info( "update currentUpdateUI again: " ,currentUpdateUI );
       makeMove(noneMove); // 
-      // updateUI(newparams) ;
     }
+    // if(validMoves.length === 0&& validMoves2.length===0){
+    //   //game is over 
+
+    // }
+    
     // We calculate the AI move only after the animation finishes,
     // because if we call aiService now
     // then the animation will be paused until the javascript finishes.

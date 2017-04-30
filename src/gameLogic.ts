@@ -87,10 +87,22 @@ module gameLogic {
   }
 
   function getWinner(board: Board): string {
-    if(!isFull(board)){ // only tell who win on Full Board
-      return '';
-    }
     let result:number[] = getBoardChessNum(board);
+    if(!isFull(board)){ //if one player no chess on borad, or both no move
+      if(result[1]===0) {return 'X';}
+      if(result[0] === 0) {return 'O';}
+      if(getTurnValidMove( board, 0 ).length===0 && getTurnValidMove( board, 1 ).length===0){
+        if(result[0]>result[1]){ return 'X';}
+        else {
+          return 'O';
+        }
+      }
+      else {
+        return '';
+      }
+    }
+    
+
     if(result[0]>result[1]){ return 'X';}
     else {
       if(result[0]<result[1]){ return 'O';}
