@@ -13,6 +13,9 @@ var aiService;
      */
     function getPossibleMoves(state, turnIndexBeforeMove) {
         var possibleMoves = [];
+        if (!state) {
+            state = gameLogic.getInitialState();
+        }
         var validMoves = gameLogic.getTurnValidMove(state.board, turnIndexBeforeMove);
         for (var _i = 0, validMoves_1 = validMoves; _i < validMoves_1.length; _i++) {
             var validMove = validMoves_1[_i];

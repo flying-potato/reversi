@@ -12,6 +12,10 @@ module aiService {
    */
   export function getPossibleMoves(state: IState, turnIndexBeforeMove: number): IMove[] {
     let possibleMoves: IMove[] = [];
+    if(!state)
+    {
+      state = gameLogic.getInitialState();
+    }
     let validMoves = gameLogic.getTurnValidMove(state.board, turnIndexBeforeMove)
     for (let validMove of validMoves){
         try {
