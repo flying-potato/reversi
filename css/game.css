@@ -5,6 +5,7 @@ html, body {
   height: 100%;
   overflow: hidden;
   position: fixed!important;
+    background-color: #9b9b92;
 }
 /* To prevent long-press that will bring up copy-paste dialog. */
 * {
@@ -28,13 +29,13 @@ textarea, input {
   display: none !important;
 }
 #gameArea {
-  background-color: #1a6843;
+  background-color: #eab860;
   position:absolute; 
   top:0%; 
   left:0%;
   height:100%;
   width:100%;
-  margin: 0%;
+  margin: -1px;
   padding: 0%;
   overflow: auto;
   border:2pt solid black"
