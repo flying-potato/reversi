@@ -13,16 +13,25 @@ var aiService;
      */
     function getPossibleMoves(state, turnIndexBeforeMove) {
         var possibleMoves = [];
-        for (var i = 0; i < gameLogic.ROWS; i++) {
-            for (var j = 0; j < gameLogic.COLS; j++) {
-                try {
-                    possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
-                }
-                catch (e) {
-                    // The cell in that position was full.
-                }
+        var validMoves = gameLogic.getTurnValidMove(state.board, turnIndexBeforeMove);
+        for (var _i = 0, validMoves_1 = validMoves; _i < validMoves_1.length; _i++) {
+            var validMove = validMoves_1[_i];
+            try {
+                possibleMoves.push(gameLogic.createMove(state, validMove[0], validMove[1], turnIndexBeforeMove));
+            }
+            catch (e) {
+                // The cell in that position was full.
             }
         }
+        // for (let i = 0; i < gameLogic.ROWS; i++) {
+        //   for (let j = 0; j < gameLogic.COLS; j++) {
+        //     try {
+        //       possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
+        //     } catch (e) {
+        //       // The cell in that position was full.
+        //     }
+        //   }
+        // }
         return possibleMoves;
     }
     aiService.getPossibleMoves = getPossibleMoves;

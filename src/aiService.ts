@@ -12,18 +12,26 @@ module aiService {
    */
   export function getPossibleMoves(state: IState, turnIndexBeforeMove: number): IMove[] {
     let possibleMoves: IMove[] = [];
-    for (let i = 0; i < gameLogic.ROWS; i++) {
-      for (let j = 0; j < gameLogic.COLS; j++) {
+    let validMoves = gameLogic.getTurnValidMove(state.board, turnIndexBeforeMove)
+    for (let validMove of validMoves){
         try {
-          possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
+          possibleMoves.push(gameLogic.createMove(state, validMove[0], validMove[1], turnIndexBeforeMove));
         } catch (e) {
           // The cell in that position was full.
         }
-      }
+
     }
+    // for (let i = 0; i < gameLogic.ROWS; i++) {
+    //   for (let j = 0; j < gameLogic.COLS; j++) {
+    //     try {
+    //       possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
+    //     } catch (e) {
+    //       // The cell in that position was full.
+    //     }
+    //   }
+    // }
     return possibleMoves;
   }
-
   /**
    * Returns the move that the computer player should do for the given state.
    * alphaBetaLimits is an object that sets a limit on the alpha-beta search,
