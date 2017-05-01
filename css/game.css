@@ -27,8 +27,17 @@ textarea, input {
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
-body {
-  background-color: rgb(30,79,36);
+#gameArea {
+  background-color: #1a6843;
+  position:absolute; 
+  top:0%; 
+  left:0%;
+  height:100%;
+  width:100%;
+  margin: 0%;
+  padding: 0%;
+  overflow: auto;
+  border:2pt solid black"
 }
 .l{
   border-left: 2pt solid black;
