@@ -31,10 +31,44 @@
         ng-class="{l:1, r: 1, b: 1, u: 1 }"
         ng-click="game.cellClicked(row, col)"
         id="{{'e2e_test_div_' + row + 'x' + col}}">
-      <div style="width:100%; height: 100%"
+       <div style="width:100%; height: 100%"
           ng-class="{flipper: game.shouldSlowlyAppear(row, col)}"
-          ng-style="game.getCellStyle(row, col)"
-          ng-if="game.shouldShowImage(row, col) || game.isValidMove(row, col)">
+		  
+		 ng-style="game.getCellStyle(row, col)"
+         ng-if="game.shouldShowImage(row, col) || game.isValidMove(row, col)">
+          
+		    <div ng-class="face_front">
+             <svg ng-if="game.isPieceO(row, col)"
+                id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
+                width="100%" height="100%">
+               <circle cx="50%" cy="50%" r="40%"
+               stroke="black" stroke-width="1%" fill="white" />
+            </svg>
+       
+            <svg ng-if="game.isPieceX(row, col)"
+               id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
+              width="100%" height="100%">
+            <circle cx="50%" cy="50%" r="40%"
+               stroke="black" stroke-width="1%" fill="black" />
+             </svg>
+          </div>
+
+
+          <div ng-class="face_back">
+            <svg ng-if="game.isPieceO(row, col)"
+                id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
+                width="100%" height="100%">
+              <circle cx="50%" cy="50%" r="40%"
+               stroke="black" stroke-width="1%" fill="black" /> 
+            </svg>
+       
+            <svg ng-if="game.isPieceX(row, col)"
+               id="{{'e2e_test_pieceX_' + row + 'x' + col}}"
+              width="100%" height="100%">
+              <circle cx="50%" cy="50%" r="40%"
+               stroke="black" stroke-width="1%" fill="white" />
+             </svg>
+          </div>
         <svg ng-if="game.isPieceO(row, col)"
             id="{{'e2e_test_pieceO_' + row + 'x' + col}}"
             width="100%" height="100%">
