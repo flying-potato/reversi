@@ -55,6 +55,36 @@ body {
 	transform-style: preserve-3d;
 	position: relative;
 }
+   
+   
+
+
+.face_front,
+.face_back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.face_front,
+.face_back {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transition: -webkit-transform 0.3s;
+          transition: transform 0.3s;
+}
+
+ .flipper.effect__click.flipped .face_front {
+  -webkit-transform: rotateY(-180deg);
+          transform: rotateY(-180deg);
+}
+
+.flipper.effect__click.flipped .face_back {
+  -webkit-transform: rotateY(0);
+          transform: rotateY(0);
+
 
 @keyframes slowlyAppear {
   from {opacity: 0.1;}
