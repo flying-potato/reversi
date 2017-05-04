@@ -35,7 +35,6 @@ textarea, input {
   left:0%;
   height:100%;
   width:100%;
-  margin: -1px;
   padding: 0%;
   overflow: auto;
 }
