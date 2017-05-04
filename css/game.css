@@ -37,6 +37,8 @@ textarea, input {
   width:100%;
   padding: 0%;
   overflow: auto;
+  border: solid black 4pt;
+  margin-left : -2%;
 }
 .l{
   border-left: 2pt solid black;
