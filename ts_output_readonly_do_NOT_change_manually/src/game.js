@@ -37,6 +37,11 @@ var game;
         // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
     }
     game.init = init;
+    function getBoardChessNum() {
+        var board = game.state.board;
+        return gameLogic.getBoardChessNum(board);
+    }
+    game.getBoardChessNum = getBoardChessNum;
     //when no valid moves we makeMove(null) for transit playerindex
     function makeNoMove() {
         var board = game.state.board;

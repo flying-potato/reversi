@@ -46,6 +46,10 @@ module game {
     // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
     
   }
+  export function getBoardChessNum():number[]{
+    let board: Board = state.board ;
+    return gameLogic.getBoardChessNum(board);
+  }
   //when no valid moves we makeMove(null) for transit playerindex
   export function makeNoMove():any{
     let board: Board = state.board ;

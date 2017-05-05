@@ -38,7 +38,7 @@ textarea, input {
   padding: 0%;
   overflow: auto;
   border: solid black 4pt;
-  margin-left : -1.5%;
+  margin-left : -1.8%;
 }
 .l{
   border-left: 2pt solid black;
@@ -70,13 +70,13 @@ textarea, input {
 #scoreBoard{
   position:absolute;
   left: 0;
-  bottom: 3%;
-  height: 10%;
+  bottom: 0%;
+  height: 12%;
   width: 95%;
-  border: solid red 6pt;
+  margin: 2%;
 }
 
-div.chessBoard{
-  height: 13%;
-  width:13%
+div.chessOnBoard{
+  height: 6%;
+
 }
