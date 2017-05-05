@@ -37,8 +37,8 @@ textarea, input {
   width:95%;
   padding: 0%;
   overflow: auto;
-  border: solid black 4pt;
-  margin-left : -1.8%;
+  border: solid green 1pt;
+  /*margin-left : -1.8%;*/
 }
 .l{
   border-left: 2pt solid black;
@@ -70,7 +70,7 @@ textarea, input {
 #scoreBoard{
   position:absolute;
   left: 0;
-  bottom: 0%;
+  bottom: 10%;
   height: 12%;
   width: 95%;
   margin: 2%;

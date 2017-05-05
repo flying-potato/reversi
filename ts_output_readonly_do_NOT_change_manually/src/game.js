@@ -20,13 +20,14 @@ var game;
     // Listen for the event.
     // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
     // dispatch the evt_NoValidMove event
+    game.heightPercentage = 0.6;
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
-        resizeGameAreaService.setWidthToHeight(1);
+        resizeGameAreaService.setWidthToHeight(game.heightPercentage); //set ratio mainly for mobile display
         gameService.setGame({
             updateUI: updateUI,
             getStateForOgImage: null,

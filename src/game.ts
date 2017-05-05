@@ -27,7 +27,7 @@ module game {
   // Listen for the event.
   // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
   // dispatch the evt_NoValidMove event
-
+  export let heightPercentage = 0.6 ;
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
@@ -35,7 +35,7 @@ module game {
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
-    resizeGameAreaService.setWidthToHeight(1);
+    resizeGameAreaService.setWidthToHeight(heightPercentage);//set ratio mainly for mobile display
     gameService.setGame({
       updateUI: updateUI,
       getStateForOgImage: null,
