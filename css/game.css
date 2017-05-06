@@ -78,8 +78,8 @@ textarea, input {
 }
 #boardArea{
   position:absolute;
-  margin-top: 1%;
-  margin-left: -49%;
+  margin-top: 0.5%;
+  margin-left: -49.5%;
   left:50%;
   height: 79%;  
   width: 98%;
