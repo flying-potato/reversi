@@ -20,7 +20,7 @@ var game;
     // Listen for the event.
     // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
     // dispatch the evt_NoValidMove event
-    game.heightPercentage = 0.6;
+    game.heightPercentage = 0.8;
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;

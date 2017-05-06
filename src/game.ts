@@ -27,7 +27,7 @@ module game {
   // Listen for the event.
   // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
   // dispatch the evt_NoValidMove event
-  export let heightPercentage = 0.6 ;
+  export let heightPercentage = 0.8 ;
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
