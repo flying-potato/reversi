@@ -77,21 +77,40 @@ textarea, input {
 }
 #boardArea{
   position:absolute;
-  /*margin-left: -48%;
-  left:50%;*/
-  height: 100%;
-  width: 100%;
+  margin-top: 1%;
+  margin-left: -48.5%;
+  left:50%;
+  height: 98%;  
+  width: 98%;
   
 }
-#scoreBoard{
+#scoreArea{
   position:absolute;
   left: 0;
-  bottom: 10%;
-  height: 12%;
+  bottom: 0.5%;
+  height: 10%;
   width: 95%;
   margin: 2%;
+  /*border : solid red 5pt;*/
+}
+.playerArea{
+
+  height: 90%;
+  width:15%;
+  /*border: solid yellow 3pt;*/
+}
+.numberArea{
+  display:table;
+
+  text-align: center;
+  height: 100%;
+  width:15%;
+  /*border: solid yellow 3pt;*/
+  font-size:150%;
 }
 
-div.chessOnBoard{
-
+.nubmerDiv
+{
+  display: table-cell;
+  vertical-align: middle;
 }
