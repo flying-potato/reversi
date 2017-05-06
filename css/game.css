@@ -49,18 +49,19 @@ textarea, input {
   border: solid green 1pt;
   /*margin-left : -1.8%;*/
 }
-.l{
-  border-left: 2pt solid black;
-}
+
 .r {
   border-right: 2pt solid black;
 }
 .b {
   border-bottom: 2pt solid black;
 }
+/*.l{
+  border-left: 2pt solid black;
+}
 .u {
   border-top: 2pt solid black;
-}
+}*/
 
 
 .slowlyAppear {
@@ -78,11 +79,12 @@ textarea, input {
 #boardArea{
   position:absolute;
   margin-top: 1%;
-  margin-left: -48.5%;
+  margin-left: -49%;
   left:50%;
-  height: 98%;  
+  height: 79%;  
   width: 98%;
-  
+  border-top:2pt solid black;
+  border-left:2pt solid black;
 }
 #scoreArea{
   position:absolute;
