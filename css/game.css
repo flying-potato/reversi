@@ -89,7 +89,7 @@ textarea, input {
 #scoreArea{
   position:absolute;
   left: 0;
-  bottom: 0.5%;
+  bottom: 3%;
   height: 10%;
   width: 95%;
   margin: 2%;
