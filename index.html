@@ -30,7 +30,7 @@
     <div ng-repeat="  row in [0, 1, 2, 3, 4 ,5 ,6 ,7 ]" 
           style="position:absolute; top:{{row * 12.45}}%; left:0%; width:100.5%; height:{{12.45}}%;">
       <div ng-repeat="col in [0, 1, 2, 3, 4 ,5 ,6 ,7 ]"
-          style="position:absolute; top:0; left:{{col * 12.45 - 0.5}}%; width:12.45%; height:100%;"
+          style="position:absolute; top:0; left:{{col * 12.45 - 0.4}}%; width:12.45%; height:100%;"
           ng-class="{b: row<=7, r: col<=7}"
           ng-click="game.cellClicked(row, col)"
           id="{{'e2e_test_div_' + row + 'x' + col}}">
