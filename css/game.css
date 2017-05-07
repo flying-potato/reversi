@@ -96,7 +96,7 @@ textarea, input {
   /*border : solid red 5pt;*/
 }
 .playerArea{
-
+  text-align: center;
   height: 100%;
   width:15%;
   /*border: solid blue 1pt;*/
