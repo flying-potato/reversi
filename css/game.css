@@ -47,7 +47,6 @@ textarea, input {
   width:95%;
   padding: 0%;
   overflow: auto;
-  border: solid green 1pt;
   /*margin-left : -1.8%;*/
 }
 
