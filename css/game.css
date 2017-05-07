@@ -98,7 +98,7 @@ textarea, input {
 .playerArea{
   text-align: center;
   height: 100%;
-  width:15%;
+  width:14%;
   /*border: solid blue 1pt;*/
 }
 .numberArea{
@@ -106,7 +106,7 @@ textarea, input {
 
   text-align: center;
   height: 100%;
-  width:15%;
+  width:14%;
   /*border: solid yellow 1pt;*/
   font-size:150%;
 }
