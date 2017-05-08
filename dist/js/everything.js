@@ -31655,8 +31655,8 @@ var log = gamingPlatform.log;
 var dragAndDropService = gamingPlatform.dragAndDropService;
 var gameLogic;
 (function (gameLogic) {
-    gameLogic.ROWS = 3;
-    gameLogic.COLS = 3;
+    gameLogic.ROWS = 8;
+    gameLogic.COLS = 8;
     /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
     function getInitialBoard() {
         var board = [];
@@ -31664,6 +31664,18 @@ var gameLogic;
             board[i] = [];
             for (var j = 0; j < gameLogic.COLS; j++) {
                 board[i][j] = '';
+                if (i === gameLogic.ROWS / 2 - 1 && j === i) {
+                    board[i][j] = 'O';
+                }
+                if (i === gameLogic.ROWS / 2 && j === i) {
+                    board[i][j] = 'O';
+                }
+                if (i === gameLogic.ROWS / 2 - 1 && j === i + 1) {
+                    board[i][j] = 'X';
+                }
+                if (i === gameLogic.ROWS / 2 && j === i - 1) {
+                    board[i][j] = 'X';
+                }
             }
         }
         return board;
@@ -31689,52 +31701,187 @@ var gameLogic;
                 }
             }
         }
-        // No empty cells, so we have a tie!
-        return true;
+        var result = getBoardChessNum(board);
+        if (result[0] === result[1]) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
-    /**
-     * Return the winner (either 'X' or 'O') or '' if there is no winner.
-     * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-     * E.g., getWinner returns 'X' for the following board:
-     *     [['X', 'O', ''],
-     *      ['X', 'O', ''],
-     *      ['X', '', '']]
-     */
-    function getWinner(board) {
-        var boardString = '';
+    function getBoardChessNum(board) {
+        var finalChessNum = [0, 0];
         for (var i = 0; i < gameLogic.ROWS; i++) {
             for (var j = 0; j < gameLogic.COLS; j++) {
-                var cell = board[i][j];
-                boardString += cell === '' ? ' ' : cell;
+                if (board[i][j] === 'X') {
+                    finalChessNum[0]++;
+                }
+                if (board[i][j] === 'O') {
+                    finalChessNum[1]++;
+                }
             }
         }
-        var win_patterns = [
-            'XXX......',
-            '...XXX...',
-            '......XXX',
-            'X..X..X..',
-            '.X..X..X.',
-            '..X..X..X',
-            'X...X...X',
-            '..X.X.X..'
-        ];
-        for (var _i = 0, win_patterns_1 = win_patterns; _i < win_patterns_1.length; _i++) {
-            var win_pattern = win_patterns_1[_i];
-            var x_regexp = new RegExp(win_pattern);
-            var o_regexp = new RegExp(win_pattern.replace(/X/g, 'O'));
-            if (x_regexp.test(boardString)) {
+        return finalChessNum;
+    }
+    gameLogic.getBoardChessNum = getBoardChessNum;
+    function getWinner(board) {
+        var result = getBoardChessNum(board);
+        if (!isFull(board)) {
+            if (result[1] === 0) {
                 return 'X';
             }
-            if (o_regexp.test(boardString)) {
+            if (result[0] === 0) {
                 return 'O';
             }
+            if (getTurnValidMove(board, 0).length === 0 && getTurnValidMove(board, 1).length === 0) {
+                if (result[0] > result[1]) {
+                    return 'X';
+                }
+                else {
+                    return 'O';
+                }
+            }
+            else {
+                return '';
+            }
         }
-        return '';
+        if (result[0] > result[1]) {
+            return 'X';
+        }
+        else {
+            if (result[0] < result[1]) {
+                return 'O';
+            }
+            else {
+                return '';
+            }
+        }
+    }
+    function isFull(board) {
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                if (board[i][j] === '') {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     /**
      * Returns the move that should be performed when player
      * with index turnIndexBeforeMove makes a move in cell row X col.
      */
+    function inBoard(pos, ROWS, COLS) {
+        if ((pos[0] >= 0 && pos[0] < ROWS) && (pos[1] >= 0 && pos[1] < COLS)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function reversePos(board, row, col) {
+        if (board[row][col] !== '') {
+            board[row][col] = board[row][col] === 'X' ? 'O' : 'X';
+        }
+    }
+    function reverseLine(board, row, col, dir, end) {
+        //reverse logic is or , not and, one not equal, not reaching end
+        for (var r = row + dir[0], c = col + dir[1]; (r !== end[0] || c !== end[1]); r += dir[0], c += dir[1]) {
+            reversePos(board, r, c);
+        }
+    }
+    function getReversibleRivalDirEnd(board, row, col, rivalDirs, turnIndexBeforeMove) {
+        var dir_ends = [];
+        var turnChar = turnIndexBeforeMove === 0 ? 'X' : 'O';
+        for (var _i = 0, rivalDirs_1 = rivalDirs; _i < rivalDirs_1.length; _i++) {
+            var rivalDir = rivalDirs_1[_i];
+            var endTurnChar = ifFollowedSpecString(turnChar, board, row, col, rivalDir, turnIndexBeforeMove);
+            if (endTurnChar !== null) {
+                dir_ends.push({ dir: rivalDir, end: endTurnChar });
+            }
+        }
+        return dir_ends;
+    }
+    function getRivalChessDir(board, row, col, turnIndexBeforeMove) {
+        var rivalIndex = 1 - turnIndexBeforeMove;
+        var turnChar = turnIndexBeforeMove === 0 ? 'X' : 'O'; //don't use if block statement, will cause scope issue
+        var rivalChar = turnIndexBeforeMove === 0 ? 'O' : 'X';
+        var dels = [-1, 0, 1];
+        var eightDir = [];
+        for (var _i = 0, dels_1 = dels; _i < dels_1.length; _i++) {
+            var dr = dels_1[_i];
+            for (var _a = 0, dels_2 = dels; _a < dels_2.length; _a++) {
+                var dc = dels_2[_a];
+                if (!(dr === 0 && dc === 0)) {
+                    var checkRow = row + dr;
+                    var checkCol = col + dc;
+                    if (inBoard([checkRow, checkCol], gameLogic.ROWS, gameLogic.COLS) && board[checkRow][checkCol] === rivalChar) {
+                        eightDir.push([dr, dc]);
+                    }
+                }
+            }
+        }
+        return eightDir; //direction of rival chess
+    }
+    function ifFollowedSpecString(followStr, board, row, col, rivaldir, turnIndexBeforeMove) {
+        var turnChar = turnIndexBeforeMove === 0 ? 'X' : 'O'; //don't use if block statement, will cause scope issue
+        var rivalChar = turnIndexBeforeMove === 0 ? 'O' : 'X';
+        // let checkRow = row + (2*rivaldir[0]) ;
+        // let checkCol = col + (2*rivaldir[1]) ;
+        var checkRow = row + (2 * rivaldir[0]), checkCol = col + (2 * rivaldir[1]);
+        while (inBoard([checkRow, checkCol], gameLogic.ROWS, gameLogic.COLS)) {
+            if (board[checkRow][checkCol] === followStr) {
+                return [checkRow, checkCol]; //return end position
+            }
+            if (board[checkRow][checkCol] === rivalChar) {
+                checkRow = checkRow + rivaldir[0]; //update varible
+                checkCol = checkCol + rivaldir[1]; //update col adding rivaldir[1]
+            }
+            else {
+                return null;
+            }
+        }
+        return null; //out borad
+    }
+    //check if one player can play in this turn code
+    function getTurnChessPos(board, turnIndexBeforeMove) {
+        var turnChar = turnIndexBeforeMove === 0 ? 'X' : 'O';
+        var ret = [];
+        for (var i = 0; i < gameLogic.ROWS; i++) {
+            for (var j = 0; j < gameLogic.COLS; j++) {
+                if (board[i][j] === turnChar) {
+                    ret.push([i, j]);
+                }
+            }
+        }
+        return ret;
+    }
+    function getTurnValidMove(board, turnIndexBeforeMove) {
+        var turnPos = getTurnChessPos(board, turnIndexBeforeMove);
+        var ret = [];
+        for (var _i = 0, turnPos_1 = turnPos; _i < turnPos_1.length; _i++) {
+            var eachPos = turnPos_1[_i];
+            var rivalDirs = getRivalChessDir(board, eachPos[0], eachPos[1], turnIndexBeforeMove);
+            for (var _a = 0, rivalDirs_2 = rivalDirs; _a < rivalDirs_2.length; _a++) {
+                var rivalDir = rivalDirs_2[_a];
+                var end = ifFollowedSpecString('', board, eachPos[0], eachPos[1], rivalDir, turnIndexBeforeMove);
+                if (end !== null) {
+                    ret.push(end);
+                }
+            }
+        }
+        return ret;
+    }
+    gameLogic.getTurnValidMove = getTurnValidMove;
+    function ifMoveValid(row, col, validMoves) {
+        for (var _i = 0, validMoves_1 = validMoves; _i < validMoves_1.length; _i++) {
+            var validMove = validMoves_1[_i];
+            if (row === validMove[0] && col === validMove[1]) {
+                return true;
+            }
+        }
+        return false;
+    }
     function createMove(stateBeforeMove, row, col, turnIndexBeforeMove) {
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
@@ -31743,11 +31890,24 @@ var gameLogic;
         if (board[row][col] !== '') {
             throw new Error("One can only make a move in an empty position!");
         }
-        if (getWinner(board) !== '' || isTie(board)) {
-            throw new Error("Can only make a move if the game is not over!");
+        if (isFull(board) || getWinner(board) !== '' || isTie(board)) {
+            throw new Error("Can only make a move if the game is not over!"); //cannot move
         }
+        // created validMoves before createMove
+        var validMoves = getTurnValidMove(board, turnIndexBeforeMove);
+        if (!ifMoveValid(row, col, validMoves)) {
+            throw new Error("Please choose a valid position with yellow dot");
+        }
+        // console.log( "Valid Moves: ", validMoves);
         var boardAfterMove = angular.copy(board);
+        //************ begin change board ************
         boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+        var rivalDirs = getRivalChessDir(boardAfterMove, row, col, turnIndexBeforeMove);
+        var dir_ends = getReversibleRivalDirEnd(boardAfterMove, row, col, rivalDirs, turnIndexBeforeMove);
+        for (var _i = 0, dir_ends_1 = dir_ends; _i < dir_ends_1.length; _i++) {
+            var dir_end = dir_ends_1[_i];
+            reverseLine(boardAfterMove, row, col, dir_end.dir, dir_end.end);
+        }
         var winner = getWinner(boardAfterMove);
         var endMatchScores;
         var turnIndex;
@@ -31796,22 +31956,57 @@ var game;
     game.didMakeMove = false; // You can only make one move per updateUI
     game.animationEndedTimeout = null;
     game.state = null;
-    // For community games.
+    // export let validMoves: number[][] = [] ; //newly added to store valid moves
+    // For community games. //proposals for multiple player games
     game.proposals = null;
     game.yourPlayerInfo = null;
+    // export let nd_gameArea:any = null;
+    // export let evt_NoValidMove:any = null; 
+    // Listen for the event.
+    // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
+    // dispatch the evt_NoValidMove event
+    game.heightPercentage = 0.8;
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
-        resizeGameAreaService.setWidthToHeight(1);
+        resizeGameAreaService.setWidthToHeight(game.heightPercentage); //set ratio mainly for mobile display
         gameService.setGame({
             updateUI: updateUI,
             getStateForOgImage: null,
         });
+        // nd_gameArea =  document.getElementById("gameArea");
+        // evt_NoValidMove = new Event('noValidMove');
+        // console.log("event binding: ", nd_gameArea);
+        // nd_gameArea.addEventListener('noValidMove', makeNoMove, false);
     }
     game.init = init;
+    function getBoardChessNum() {
+        var board = game.state.board;
+        return gameLogic.getBoardChessNum(board);
+    }
+    game.getBoardChessNum = getBoardChessNum;
+    //when no valid moves we makeMove(null) for transit playerindex
+    function makeNoMove() {
+        var board = game.state.board;
+        var turnIndexBeforeMove = game.currentUpdateUI.yourPlayerIndex;
+        var validMoves = gameLogic.getTurnValidMove(board, turnIndexBeforeMove);
+        console.log("Playerindex", turnIndexBeforeMove, "From makeNoMove event listener function: ", validMoves);
+        // if( validMoves.length === 0 ){
+        //   let nextMove: IMove = null;
+        //   let turnIndex:number = stateBeforeMove.
+        //   nextMove = {}
+        // return {
+        //   endMatchScores: null,
+        //   turnIndex: turnIndex,
+        //   state: state
+        // };
+        //   makeMove()
+        // }
+    }
+    game.makeNoMove = makeNoMove;
     function registerServiceWorker() {
         // I prefer to use appCache over serviceWorker
         // (because iOS doesn't support serviceWorker, so we have to use appCache)
@@ -31881,12 +32076,37 @@ var game;
             if (game.currentUpdateUI && angular.equals(game.currentUpdateUI, params))
                 return;
         }
-        game.currentUpdateUI = params;
+        // console.log("before update currentUpdateUI: " ,  gameLogic.getBoardChessNum(currentUpdateUI.state.board));
+        log.info("before update currentUpdateUI: ", game.currentUpdateUI); //-----------
+        game.currentUpdateUI = params; //IUpdateUI extends IMove{endmatchscore, turnIndex, board }
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
         }
+        log.info("after update currentUpdateUI: ", game.currentUpdateUI);
+        console.log("chess# : ", gameLogic.getBoardChessNum(game.state.board));
+        var validMoves = gameLogic.getTurnValidMove(game.state.board, params.yourPlayerIndex);
+        var validMoves2 = gameLogic.getTurnValidMove(game.state.board, 1 - params.yourPlayerIndex);
+        if (validMoves.length === 0 && validMoves2.length > 0) {
+            log.info("Player ", params.yourPlayerIndex, " no where to move ");
+            var newparams = angular.copy(params);
+            newparams.yourPlayerIndex = 1 - newparams.yourPlayerIndex;
+            newparams.turnIndex = 1 - newparams.turnIndex;
+            // update UI again
+            game.currentUpdateUI = newparams;
+            game.state.delta = { row: -1, col: -1 };
+            var noneMove = {
+                endMatchScores: null,
+                turnIndex: newparams.yourPlayerIndex,
+                state: game.state
+            };
+            log.info("update currentUpdateUI again: ", game.currentUpdateUI);
+            makeMove(noneMove); // 
+        }
+        // if(validMoves.length === 0&& validMoves2.length===0){
+        //   //game is over 
+        // }
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
         // then the animation will be paused until the javascript finishes.
@@ -31963,16 +32183,26 @@ var game;
         log.info("Clicked on cell:", row, col);
         if (!isHumanTurn())
             return;
+        // let validMoves = gameLogic.getTurnValidMove(state.board, currentUpdateUI.turnIndex);
+        // if( validMoves.length === 0) {
+        //     currentUpdateUI.turnIndex = 1 - currentUpdateUI.turnIndex;
+        //     return;
+        // }
         var nextMove = null;
         try {
             nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
         }
         catch (e) {
-            log.info(["Cell is already full in position:", row, col]);
+            log.info(["cannot make a move on position: ", row, col, " whose value is ", game.state.board[row][col]]);
+            log.info("ERROR INFO: ", e);
             return;
         }
         // Move is legal, make it!
         makeMove(nextMove);
+        console.log("turnindex after makeMove", nextMove.turnIndex);
+        console.log("board after move", game.state.board);
+        var chessNum = gameLogic.getBoardChessNum(game.state.board);
+        console.log("black vs. white: ", chessNum[0], chessNum[1]);
     }
     game.cellClicked = cellClicked;
     function shouldShowImage(row, col) {
@@ -31990,6 +32220,19 @@ var game;
         return isPiece(row, col, 1, 'O');
     }
     game.isPieceO = isPieceO;
+    function isValidMove(row, col) {
+        if (game.state.board[row][col] === '') {
+            var validMoves = gameLogic.getTurnValidMove(game.state.board, game.currentUpdateUI.turnIndex);
+            for (var _i = 0, validMoves_1 = validMoves; _i < validMoves_1.length; _i++) {
+                var validMove = validMoves_1[_i];
+                if (row === validMove[0] && col === validMove[1]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    game.isValidMove = isValidMove;
     function shouldSlowlyAppear(row, col) {
         return game.state.delta &&
             game.state.delta.row === row && game.state.delta.col === col;
@@ -32019,15 +32262,28 @@ var aiService;
      */
     function getPossibleMoves(state, turnIndexBeforeMove) {
         var possibleMoves = [];
-        for (var i = 0; i < gameLogic.ROWS; i++) {
-            for (var j = 0; j < gameLogic.COLS; j++) {
-                try {
-                    possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
-                }
-                catch (e) {
-                }
+        if (!state) {
+            state = gameLogic.getInitialState();
+        }
+        var validMoves = gameLogic.getTurnValidMove(state.board, turnIndexBeforeMove);
+        for (var _i = 0, validMoves_1 = validMoves; _i < validMoves_1.length; _i++) {
+            var validMove = validMoves_1[_i];
+            try {
+                possibleMoves.push(gameLogic.createMove(state, validMove[0], validMove[1], turnIndexBeforeMove));
+            }
+            catch (e) {
+                // The cell in that position was full.
             }
         }
+        // for (let i = 0; i < gameLogic.ROWS; i++) {
+        //   for (let j = 0; j < gameLogic.COLS; j++) {
+        //     try {
+        //       possibleMoves.push(gameLogic.createMove(state, i, j, turnIndexBeforeMove));
+        //     } catch (e) {
+        //       // The cell in that position was full.
+        //     }
+        //   }
+        // }
         return possibleMoves;
     }
     aiService.getPossibleMoves = getPossibleMoves;
