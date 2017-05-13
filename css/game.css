@@ -79,10 +79,10 @@ textarea, input {
 #boardArea{
   position:absolute;
   margin-top: 0.5%;
-  margin-left: -49.8%;
-  left:50.3%;
+  margin-left: -50%;
+  left:50.8%;
   height: 79%;  
-  width: 98.5%;
+  width: 98%;
   border-top:2pt solid black;
   border-left:2pt solid black;
 }
