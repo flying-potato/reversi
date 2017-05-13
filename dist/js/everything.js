@@ -31728,16 +31728,20 @@ var gameLogic;
         var result = getBoardChessNum(board);
         if (!isFull(board)) {
             if (result[1] === 0) {
+                // alert("black win\n"+ "black("+ result[0] +  ") : white(" + result[1] + ")" ); 
                 return 'X';
             }
             if (result[0] === 0) {
+                // alert("white win\n"+ "black("+ result[0] +  ") : white(" + result[1] + ")" ); 
                 return 'O';
             }
             if (getTurnValidMove(board, 0).length === 0 && getTurnValidMove(board, 1).length === 0) {
                 if (result[0] > result[1]) {
+                    // alert("black win\n"+ "black("+ result[0] +  ") : white(" + result[1] + ")" ); 
                     return 'X';
                 }
                 else {
+                    // alert("white win\n"+ "black("+ result[0] +  ") : white(" + result[1] + ")" ); 
                     return 'O';
                 }
             }
@@ -31915,6 +31919,13 @@ var gameLogic;
             // Game over.
             turnIndex = -1;
             endMatchScores = winner === 'X' ? [1, 0] : winner === 'O' ? [0, 1] : [0, 0];
+            /*      let result: number[] = getBoardChessNum(boardAfterMove);
+                  if(winner === 'X'){
+                    alert("black win\n"+ "black("+ result[0] +  ") : white(" + result[1] + ")" );
+                  }
+                  if(winner === 'O'){
+                    alert("black win\n"+ "black("+ result[0] +  ") : white(" + result[1] + ")" );
+                  }*/
         }
         else {
             // Game continues. Now it's the opponent's turn (the turn switches from 0 to 1 and 1 to 0).
