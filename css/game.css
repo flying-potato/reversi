@@ -84,8 +84,6 @@ textarea, input {
   height: 79%;  
   width: 98%;
   border:2pt solid black;
-  /*border-top:2pt solid black;
-  border-left:2pt solid black;*/
 }
 #scoreArea{
   position:absolute;
