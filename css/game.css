@@ -5,7 +5,7 @@ html {
   height: 100%;
   overflow: hidden;
   position: fixed!important;
-    background-color: #9b9b92;
+    background-color: #eab860;
 }
 body {
   margin: 0;
@@ -15,7 +15,7 @@ body {
   height: 100%;
   overflow: hidden;
   position: fixed!important;
-    background-color: #9b9b92;
+    background-color: #eab860;
 }
 /* To prevent long-press that will bring up copy-paste dialog. */
 * {
@@ -78,10 +78,9 @@ textarea, input {
 }
 #boardArea{
   position:absolute;
-  margin-top: 0.5%;
   margin-left: -50%;
-  left:50.4%;
-  height: 79%;  
+  left:50.1%;
+  height: 78%;  
   width: 98%;
   border:2pt solid black;
 }
