@@ -44,7 +44,7 @@ textarea, input {
   top:0%; 
   left:0%;
   height:95%;
-  width:95%;
+  width:110%;
   padding: 0%;
   overflow: auto;
   /*margin-left : -1.8%;*/
@@ -58,10 +58,10 @@ textarea, input {
 }
 /*.l{
   border-left: 2pt solid black;
-}
+}*/
 .u {
   border-top: 2pt solid black;
-}*/
+}
 
 
 .slowlyAppear {
@@ -80,11 +80,12 @@ textarea, input {
   position:absolute;
   margin-top: 0.5%;
   margin-left: -50%;
-  left:50.8%;
+  left:50.4%;
   height: 79%;  
   width: 98%;
-  border-top:2pt solid black;
-  border-left:2pt solid black;
+  border:2pt solid black;
+  /*border-top:2pt solid black;
+  border-left:2pt solid black;*/
 }
 #scoreArea{
   position:absolute;
